@@ -9,6 +9,43 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <h1>Coffee Run!</h1>
+
+    <form action="https://dc-coffeerun.herokuapp.com/api/coffeeOrders"
+        method="POST"
+    >
+        <!-- label tage wraps to give user a big click target
+        to focus on the input
+     -->
+        <label>
+            Coffee:
+            <!-- placeholder shows user example input -->
+            <input type="text" name="coffee" placeholder="Black, like my soul.">
+        </label>
+        <br>
+        <br>
+        <label>
+            Email Address:
+            <input type="email" name="emailAddress" placeholder="something@somewhere.domainExtension">>
+        </label>
+        <br><br>
+        <label>
+            Flavor:
+            <input type="text" name="flavor" placeholder="Sweet potato brownie">
+        </label>
+        <br><br>
+        <label>
+            Size:
+            <input type="text" name="size" placeholder="You name it, we got it.">
+        </label>
+        <br><br>
+        <label>
+            Strength:
+            <input type="number" name="strength" min="0" max="100" value="99">
+        </label>
+        <input type="submit">
+    </form>
+
    <script src="index.js"></script> 
 </body>
 </html>
