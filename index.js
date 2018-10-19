@@ -1,48 +1,101 @@
-// ==================================
-// DOM selection
-// ==================================
+// ============================================
+// Constants
+// ============================================
+const API_URL = 'https://dc-coffeerun.herokuapp.com/api/coffeeOrders';
 
-const orderForm = document.querySelector('[data-form');
+// ============================================
+// DOM Selection
+// ============================================
+const orderForm = document.querySelector('[data-form]');
+const notificationArea = document.querySelector('[data-notification]');
+const resetButton = document.querySelector('[data-reset-button]');
 
+const orderListingArea = document.querySelector('[data-order-area]');
+const orderListingButton = document.querySelector('[data-load-orders]');
 
-// ==================================
-// Helper function
-// ==================================
+// ============================================
+// Helper functions
+// ============================================
+function handleSubmit(event) {
+	event.preventDefault();
+	console.log('You get a coffee and you get a coffee and you get a coffee.');
 
-function handleSubmit(event){
-    event.preventDefault();
-    console.log('You get a coffee and you get a coffee and you get a coffee');
+	console.log(event.target);
+	// debugger;
+	// We're gonna Ajax that thing.
+	// Call fetch()
+	// pass it the URL
+	// and an object with a method and a body
+	const url = event.target.action;
+	const method = event.target.method;
+	const elements = event.target.elements;
+	const data = {
+		strength: elements.strength.value,
+		flavor: elements.flavor.value,
+		size: elements.size.value,
+		coffee: elements.coffee.value,
+		emailAddress: elements.emailAddress.value
+	};
+	fetch(url, {
+		method: method,
+		headers: {
+			'Content-Type': 'application/json; charset=utf-8'
+			// "Content-Type": "application/x-www-form-urlencoded",
+		},
+		body: JSON.stringify(data)
+	})
+		.then((r) => r.json())
+		.then((orderInfo) => {
+			// check the orderInfo for errors
+			// && is a "falsey hunter"
+			// It moves from left to right, and will stop moving
+			// when it finds the first falsey expression.
+			if (orderInfo.name && orderInfo.name === 'ValidationError') {
+				notifyUser(
+					`I'm sorry. Please fill out the coffee field and the email address field. Thanks. K. Byeeee.`
+				);
+			} else {
+				notifyUser(`You coffee is totally (not) on its way!`);
+			}
+		}); // gotta wrap it in an anonymous function
 
-    console.log(event.target);
-    // debugger;
-    // We're gonna Ajax that thing.
-    // call fetch()
-    // pass it the urel
-    // and an object with a method and a body
-    const url = event.target.action;
-    const method = event.target.method;
-    const elements = event.target.elements;
-    const data = {
-        strength: elements.strength.value
-        flavor: elements.flavor.value
-        size: elements.size.value
-        coffee: elements.coffee.value
-        emailAddress: elements.emailAddress.value
-    }
-    fetch(url, {
-        method: method,
-        headers: (
-            "content-type":"application/json; charset-utf-8",  
-        )
-        body: JSON.stringify(data)
-    })
-    .then(r => r.JSON())
-    .then(console.log)
-    // debugger;
+	// debugger;
 }
 
-// ==================================
+function notifyUser(notificationText) {
+	// create a div
+	const notificationBox = document.createElement('div');
+	// add some text content
+	notificationBox.textContent = notificationText;
+
+	// Must check for the existence of a .firstChild
+	// otherwise, the removeChild function call will fail.
+	// if (notificationArea.firstChild) {
+	//     notificationArea.removeChild(notificationArea.firstChild);
+	// }
+	notificationArea.innerHTML = '';
+
+	// append to...something...somewhere...somehow...
+	notificationArea.appendChild(notificationBox);
+}
+
+function confirmReset(e) {
+	let doesWantToReset = confirm('Really?');
+	if (!doesWantToReset) {
+		e.preventDefault();
+	}
+}
+
+function getAndShowOrders(event) {
+	console.log('hey! a click!');
+	// console.log(event);
+	fetch('https://dc-coffeerun.herokuapp.com/api/coffeeOrders');
+}
+
+// ============================================
 // Main Event Listeners
-// ==================================
-console.log('about to add event listener!')
+// ============================================
+console.log('about to add event listener!');
 orderForm.addEventListener('submit', handleSubmit);
+resetButton.addEventListener('click', confirmReset);
+orderListingButton.addEventListener('click', getAndShowOrders);
